@@ -11,10 +11,10 @@
 #' @param gene_ids_are_symbols TRUE if rownames are already gene symbols
 #' @return Seurat object
 #' @export
-#' @importFrom Seurat RenameAssays DefaultAssay CreateAssayObject
-#' @importFrom SingleCellExperiment assayNames assays
-#' @importFrom biomaRt useEnsembl getBM
 #' @importFrom zellkonverter readH5AD
+#' @importFrom Seurat as.Seurat RenameAssays DefaultAssay CreateAssayObject
+#' @importFrom SummarizedExperiment assayNames assays
+#' @importFrom biomaRt useEnsembl getBM
 
 
 # -------------------------------
@@ -33,7 +33,7 @@ convert_h5ad_to_seurat <- function(
   # -------------------------------
   # 1. Load AnnData object
   # -------------------------------
-  sce <- zellkonverter::readH5AD(h5ad_file)
+  sce <- readH5AD(h5ad_file)
   
   # -------------------------------
   # 2. Gene ID mapping if needed
@@ -43,7 +43,7 @@ convert_h5ad_to_seurat <- function(
     mart_dataset <- switch(species,
                            hsapiens = "hsapiens_gene_ensembl",
                            mmusculus = "mmusculus_gene_ensembl")
-    mart <- biomaRt::useEnsembl(biomart = "genes", dataset = mart_dataset)
+    mart <- useEnsembl(biomart = "genes", dataset = mart_dataset)
     
     gene_ids <- rownames(sce)
     
@@ -52,7 +52,7 @@ convert_h5ad_to_seurat <- function(
                     hsapiens = c("ensembl_gene_id", "hgnc_symbol"),
                     mmusculus = c("ensembl_gene_id", "mgi_symbol"))
     
-    mapping <- biomaRt::getBM(
+    mapping <- getBM(
       attributes = attrs,
       filters = "ensembl_gene_id",
       values = gene_ids,
@@ -75,11 +75,11 @@ convert_h5ad_to_seurat <- function(
   # -------------------------------
   # 3. Convert main assay to Seurat
   # -------------------------------
-  seu <- Seurat::as.Seurat(sce, counts = counts_assay, data = data_assay)
+  seu <- as.Seurat(sce, counts = counts_assay, data = data_assay)
   
   # Rename main assay
   seu <- RenameAssays(seu, originalexp = new_main_assay)
-  Seurat::DefaultAssay(seu) <- new_main_assay
+  DefaultAssay(seu) <- new_main_assay
   
   
   # -------------------------------
@@ -92,7 +92,7 @@ convert_h5ad_to_seurat <- function(
   
   for (a in remaining) {
     # Add each assay as its own Seurat assay object
-    seu[[a]] <- Seurat::CreateAssayObject(counts = SingleCellExperiment::assays(sce)[[a]])
+    seu[[a]] <- CreateAssayObject(counts = assays(sce)[[a]])
   }
   
   return(seu)
