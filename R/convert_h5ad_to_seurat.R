@@ -81,7 +81,8 @@ convert_h5ad_to_seurat <- function(
   seu <- as.Seurat(sce, counts = counts_assay, data = data_assay)
   
   # Rename main assay
-  seu <- RenameAssays(seu, originalexp = new_main_assay)
+  # seu <- RenameAssays(seu, originalexp = new_main_assay)
+  names(seu@assays)[names(seu@assays) == "originalexp"] <- new_main_assay
   DefaultAssay(seu) <- new_main_assay
   
   
