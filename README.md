@@ -1,6 +1,6 @@
 # H5ADtoSeurat
 
-# H5AD to Seurat Conversion Wrapper
+# Easily Convert AnnData (.h5ad) Object to Seurat Object
 
 This R script provides a flexible wrapper function to convert **AnnData (adata)** objects stored in **h5ad files** (from Python/Scanpy/Squidpy) to **Seurat** objects in R. It preserves all assays, allows gene ID mapping, and lets you rename the main Seurat assay.
 
@@ -19,6 +19,8 @@ This R script provides a flexible wrapper function to convert **AnnData (adata)*
 
 ## Installation
 
+### 1. Install the dependencies
+
 ```r
 # Install required packages if not already installed
 install.packages(c("Seurat", "SingleCellExperiment", "biomaRt", "devtools"))
@@ -26,8 +28,9 @@ BiocManager::install("zellkonverter")
 BiocManager::install("SeuratDisk")
 ```
 
+### 2. Install the H5ADtoSeurat package from GitHub
+
 ```r
-# Install the H5ADtoSeurat function from GitHub
 library(devtools)
 install_github("codedbypartha/H5ADtoSeurat")
 ```
