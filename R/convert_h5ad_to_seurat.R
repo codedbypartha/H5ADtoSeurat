@@ -12,6 +12,9 @@
 #' @return Seurat object
 #' @export
 #' @importFrom Seurat RenameAssays DefaultAssay CreateAssayObject
+#' @importFrom SingleCellExperiment assayNames assays
+#' @importFrom biomaRt useEnsembl getBM
+#' @importFrom zellkonverter readH5AD
 
 
 # -------------------------------
@@ -82,7 +85,7 @@ convert_h5ad_to_seurat <- function(
   # -------------------------------
   # 4. Convert remaining SCE assays automatically
   # -------------------------------
-  all_assays <- SingleCellExperiment::assayNames(sce)
+  all_assays <- assayNames(sce)
   
   # Skip counts/data assays already converted
   remaining <- setdiff(all_assays, c(counts_assay, data_assay))
