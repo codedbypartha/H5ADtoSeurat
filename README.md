@@ -2,7 +2,7 @@
 
 # H5AD to Seurat Conversion Wrapper
 
-This R script provides a flexible wrapper function to convert **SingleCellExperiment (SCE)** objects stored in **h5ad files** (from Python/Scanpy) to **Seurat** objects in R. It preserves all assays, allows gene ID mapping, and lets you rename the main Seurat assay.
+This R script provides a flexible wrapper function to convert **AnnData (adata)** objects stored in **h5ad files** (from Python/Scanpy/Squidpy) to **Seurat** objects in R. It preserves all assays, allows gene ID mapping, and lets you rename the main Seurat assay.
 
 ---
 
@@ -21,9 +21,15 @@ This R script provides a flexible wrapper function to convert **SingleCellExperi
 
 ```r
 # Install required packages if not already installed
-install.packages(c("Seurat", "SingleCellExperiment", "biomaRt"))
+install.packages(c("Seurat", "SingleCellExperiment", "biomaRt", "devtools"))
 BiocManager::install("zellkonverter")
 BiocManager::install("SeuratDisk")
+```
+
+```r
+# Install the H5ADtoSeurat function from GitHub
+library(devtools)
+install_github("codedbypartha/H5ADtoSeurat")
 ```
 
 ---
@@ -33,14 +39,16 @@ BiocManager::install("SeuratDisk")
 ### 1. Load the wrapper function
 
 ```r
-source("convert_h5ad_to_seurat_full.R")
+library(H5ADtoSeurat)
+ls("package:H5ADtoSeurat")
+# It should show "convert_h5ad_to_seurat"
 ```
 
 ### 2. Convert a human h5ad file
 
 ```r
-seu_human <- convert_h5ad_to_seurat_full(
-  h5ad_file = "Panel1_cells_scale_10_asg_conf_0.75_final_data.h5ad",
+seu_human <- convert_h5ad_to_seurat(
+  h5ad_file = "test_data.h5ad",
   species = "hsapiens",
   counts_assay = "raw_counts",   # Name of raw counts assay in SCE
   data_assay = "X",              # Name of normalized data assay in SCE
@@ -52,7 +60,7 @@ seu_human <- convert_h5ad_to_seurat_full(
 ### 3. Convert a mouse h5ad file with pre-mapped gene symbols
 
 ```r
-seu_mouse <- convert_h5ad_to_seurat_full(
+seu_mouse <- convert_h5ad_to_seurat(
   h5ad_file = "mouse_data.h5ad",
   species = "mmusculus",
   counts_assay = "counts",
