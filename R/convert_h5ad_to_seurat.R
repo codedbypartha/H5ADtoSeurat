@@ -1,3 +1,9 @@
+#' Package-level imports
+#' @importFrom zellkonverter readH5AD
+#' @importFrom Seurat as.Seurat RenameAssays DefaultAssay CreateAssayObject
+#' @importFrom SummarizedExperiment assayNames assays
+#' @importFrom biomaRt useEnsembl getBM
+NULL
 #' Convert H5AD to Seurat
 #'
 #' This function reads a .h5ad file (or SCE) and converts it into a Seurat object,
@@ -11,10 +17,7 @@
 #' @param gene_ids_are_symbols TRUE if rownames are already gene symbols
 #' @return Seurat object
 #' @export
-#' @importFrom zellkonverter readH5AD
-#' @importFrom Seurat as.Seurat RenameAssays DefaultAssay CreateAssayObject
-#' @importFrom SummarizedExperiment assayNames assays
-#' @importFrom biomaRt useEnsembl getBM
+
 
 
 # -------------------------------
