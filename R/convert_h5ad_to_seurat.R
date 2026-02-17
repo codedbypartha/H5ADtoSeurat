@@ -12,14 +12,9 @@
 #' @return Seurat object
 #' @export
 
-# Load required libraries
-library(zellkonverter)
-library(Seurat)
-library(SingleCellExperiment)
-library(biomaRt)
 
 # -------------------------------
-# Wrapper function: fully automated SCE → Seurat with all assays
+# Wrapper function: fully automated AnnData → Seurat with all assays
 # -------------------------------
 convert_h5ad_to_seurat <- function(
   h5ad_file,                    # Path to h5ad file
@@ -32,9 +27,9 @@ convert_h5ad_to_seurat <- function(
   species <- match.arg(species)
   
   # -------------------------------
-  # 1. Load SCE object
+  # 1. Load AnnData object
   # -------------------------------
-  sce <- readH5AD(h5ad_file)
+  sce <- zellkonverter::readH5AD(h5ad_file)
   
   # -------------------------------
   # 2. Gene ID mapping if needed
@@ -44,16 +39,16 @@ convert_h5ad_to_seurat <- function(
     mart_dataset <- switch(species,
                            hsapiens = "hsapiens_gene_ensembl",
                            mmusculus = "mmusculus_gene_ensembl")
-    mart <- useEnsembl(biomart = "genes", dataset = mart_dataset)
+    mart <- biomaRt::useEnsembl(biomart = "genes", dataset = mart_dataset)
     
-    gene_ids <- rownames(sce)
+    gene_ids <- SingleCellExperiment::rownames(sce)
     
     # Get gene symbols
     attrs <- switch(species,
                     hsapiens = c("ensembl_gene_id", "hgnc_symbol"),
                     mmusculus = c("ensembl_gene_id", "mgi_symbol"))
     
-    mapping <- getBM(
+    mapping <- biomaRt::getBM(
       attributes = attrs,
       filters = "ensembl_gene_id",
       values = gene_ids,
@@ -76,23 +71,23 @@ convert_h5ad_to_seurat <- function(
   # -------------------------------
   # 3. Convert main assay to Seurat
   # -------------------------------
-  seu <- as.Seurat(sce, counts = counts_assay, data = data_assay)
+  seu <- Seurat::as.Seurat(sce, counts = counts_assay, data = data_assay)
   
   # Rename main assay
-  seu <- RenameAssays(seu, originalexp = new_main_assay)
-  DefaultAssay(seu) <- new_main_assay
+  seu <- Seurat::RenameAssays(seu, originalexp = new_main_assay)
+  
   
   # -------------------------------
   # 4. Convert remaining SCE assays automatically
   # -------------------------------
-  all_assays <- assayNames(sce)
+  all_assays <- SingleCellExperiment::assayNames(sce)
   
   # Skip counts/data assays already converted
   remaining <- setdiff(all_assays, c(counts_assay, data_assay))
   
   for (a in remaining) {
     # Add each assay as its own Seurat assay object
-    seu[[a]] <- CreateAssayObject(counts = assays(sce)[[a]])
+    seu[[a]] <- Seurat::CreateAssayObject(counts = assays(sce)[[a]])
   }
   
   return(seu)
