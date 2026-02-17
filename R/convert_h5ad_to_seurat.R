@@ -83,7 +83,7 @@ convert_h5ad_to_seurat <- function(
   # Rename main assay
   # seu <- RenameAssays(seu, originalexp = new_main_assay)
   names(seu@assays)[names(seu@assays) == "originalexp"] <- new_main_assay
-  DefaultAssay(seu) <- new_main_assay
+  SeuratObject::DefaultAssay(seu) <- new_main_assay
   
   
   # -------------------------------
