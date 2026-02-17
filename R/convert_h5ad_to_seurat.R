@@ -21,7 +21,7 @@ library(biomaRt)
 # -------------------------------
 # Wrapper function: fully automated SCE → Seurat with all assays
 # -------------------------------
-convert_h5ad_to_seurat_full <- function(
+convert_h5ad_to_seurat <- function(
   h5ad_file,                    # Path to h5ad file
   species = c("hsapiens", "mmusculus"),  # Species for gene mapping
   counts_assay = "raw_counts",  # Counts assay in SCE
