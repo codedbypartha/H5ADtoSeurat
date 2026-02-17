@@ -75,6 +75,7 @@ convert_h5ad_to_seurat <- function(
   
   # Rename main assay
   seu <- Seurat::RenameAssays(seu, originalexp = new_main_assay)
+  Seurat::DefaultAssay(seu) <- new_main_assay
   
   
   # -------------------------------
@@ -87,7 +88,7 @@ convert_h5ad_to_seurat <- function(
   
   for (a in remaining) {
     # Add each assay as its own Seurat assay object
-    seu[[a]] <- Seurat::CreateAssayObject(counts = assays(sce)[[a]])
+    seu[[a]] <- Seurat::CreateAssayObject(counts = SingleCellExperiment::assays(sce)[[a]])
   }
   
   return(seu)
