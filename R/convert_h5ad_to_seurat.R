@@ -11,6 +11,7 @@
 #' @param gene_ids_are_symbols TRUE if rownames are already gene symbols
 #' @return Seurat object
 #' @export
+#' @importFrom Seurat RenameAssays DefaultAssay CreateAssayObject
 
 
 # -------------------------------
@@ -74,7 +75,7 @@ convert_h5ad_to_seurat <- function(
   seu <- Seurat::as.Seurat(sce, counts = counts_assay, data = data_assay)
   
   # Rename main assay
-  seu <- Seurat::RenameAssays(seu, originalexp = new_main_assay)
+  seu <- RenameAssays(seu, originalexp = new_main_assay)
   Seurat::DefaultAssay(seu) <- new_main_assay
   
   
