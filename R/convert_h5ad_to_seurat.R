@@ -41,7 +41,7 @@ convert_h5ad_to_seurat <- function(
                            mmusculus = "mmusculus_gene_ensembl")
     mart <- biomaRt::useEnsembl(biomart = "genes", dataset = mart_dataset)
     
-    gene_ids <- SingleCellExperiment::rownames(sce)
+    gene_ids <- rownames(sce)
     
     # Get gene symbols
     attrs <- switch(species,
