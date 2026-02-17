@@ -1,1 +1,5 @@
 export(convert_h5ad_to_seurat)
+importFrom(zellkonverter, readH5AD)
+importFrom(Seurat, as.Seurat, RenameAssays, DefaultAssay, CreateAssayObject)
+importFrom(SummarizedExperiment, assayNames, assays)
+importFrom(biomaRt, useEnsembl, getBM)
