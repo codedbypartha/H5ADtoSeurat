@@ -1,6 +1,6 @@
 #' Package-level imports
 #' @importFrom zellkonverter readH5AD
-#' @importFrom Seurat as.Seurat RenameAssays DefaultAssay CreateAssayObject
+#' @importFrom Seurat as.Seurat CreateAssayObject
 #' @importFrom SummarizedExperiment assayNames assays
 #' @importFrom biomaRt useEnsembl getBM
 NULL
